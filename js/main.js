@@ -1,6 +1,14 @@
 
-const map = L.map('map').setView([-16.495612, -68.133554], 13)
+//const map = L.map('map').setView([-16.495612, -68.133554], 13)
 
+var map = L.map('map',{
+    center: [-16.495612, -68.133554],
+    zoom:13,
+   
+    zoomControl: false
+})
+
+// Añadimos dos capas de teselas para poder cambiar entre ellas
 var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map)
@@ -9,19 +17,23 @@ var cartoDB = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager
     attribution:'CARTO'
 }).addTo(map)
 
-var baseMaps = {
-    'Open Street Map': osm,
-    'CartoDB Voyager': cartoDB
+var baseLayers={
+    'osm': osm,
+    'carto': cartoDB
 }
+L.control.layers(baseLayers).addTo(map)
 
-L.control.layers(baseMaps).addTo(map)
+L.control.zoom({
+    position:'topleft',
+    zoomInText:'+',
+    zoomOutText:'-',
+    zoomInTitle: 'Acercar',
+    zoomOutTitle:'Alejar'
+}).addTo(map)
 
-var info = L.control();
-
-info.onAdd = function(map){
-    this._div = L.DomUtil.create('div','info')    
-    this._div.innerHTML = "<h4>Mi primer Mapa</h4>"
-    return this._div
-}
-
-info.addTo(map)
+L.control.scale({
+    maxWidth: 200,         // Ancho máximo
+    metric: true,
+    imperial:true,
+    position:'bottomleft'
+}).addTo(map)
